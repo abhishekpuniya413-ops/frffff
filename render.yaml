@@ -1,0 +1,17 @@
+services:
+  - type: worker
+    name: telegram-userbot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    envVars:
+      - key: API_ID
+        sync: false
+      - key: API_HASH
+        sync: false
+      - key: SESSION_STRING
+        sync: false
+      - key: MY_USERNAME
+        value: wtw_dw
+      - key: CHATBOT_USERNAME
+        value: ChatBot
