@@ -73,6 +73,7 @@ async def handle_chatbot_message(event):
     logger.info(f"ChatBot → us: {text!r}")
 
     partner_found_phrases = [
+        "partner found",
         "you are now chatting",
         "stranger is connected",
         "connected to a stranger",
@@ -92,12 +93,14 @@ async def handle_chatbot_message(event):
         return
 
     disconnect_phrases = [
+        "partner has stopped",
+        "stopped the chat",
         "stranger has disconnected",
         "your partner disconnected",
         "partner left",
         "chat ended",
-        "looking for",
-        "disconnected",
+        "looking for a partner",
+        "type /search",
     ]
     if any(p in lower for p in disconnect_phrases):
         logger.info("Partner disconnected — sending /next.")
