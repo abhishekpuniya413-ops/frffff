@@ -1,6 +1,7 @@
 import asyncio
 import os
 import logging
+from aiohttp import web
 from telethon import TelegramClient, events
 from telethon.sessions import StringSession
 from telethon.tl.types import User
@@ -137,9 +138,27 @@ async def handle_dm(event):
 
 
 # -----------------------------------------------------------------------
+# Keep-alive web server (required for Render Web Service)
+# -----------------------------------------------------------------------
+async def keep_alive():
+    async def handle(request):
+        return web.Response(text="Bot is running! ✅")
+
+    app = web.Application()
+    app.router.add_get("/", handle)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    port = int(os.environ.get("PORT", 8080))
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    await site.start()
+    logger.info(f"Keep-alive web server started on port {port}")
+
+
+# -----------------------------------------------------------------------
 # Startup
 # -----------------------------------------------------------------------
 async def main():
+    await keep_alive()
     await client.start()
     me = await client.get_me()
     logger.info(f"Logged in as @{me.username} ({me.first_name})")
